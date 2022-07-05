@@ -1,0 +1,13 @@
+[Unit]
+Description=A Custom Sliver client that will send webhook notifications upon getting a new beacon or session
+
+[Service]
+Type=simple
+User=root
+StandardOutput=syslog
+StandardError=syslog
+WorkingDirectory=/opt/sally-the-sliver-siren
+ExecStart=python3 sally.py -c /path/to/config -u https://slack.com
+
+[Install]
+WantedBy=multi-user.target

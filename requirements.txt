@@ -1,0 +1,3 @@
+sliver-py
+requests
+asyncio
