@@ -11,7 +11,7 @@ async def main():
     parser = argparse.ArgumentParser(description='Custom Sliver client that will will emit events and send webhook notifications when new beacons / sessions check in.')
     parser.add_argument('-c', '--sliver_config', type=Path, help='Path to the sliver config to connect with')
     parser.add_argument('-u', '--slack_url', type=str, help='Slack URL to send notifications to' )
-    parser.add_argument('-s', '--sleep', default=1, help='Sleep time in between checking for changes in beacons / sessions')
+    parser.add_argument('-s', '--sleep', type=int, default=1, help='Sleep time in between checking for changes in beacons / sessions')
 
     
     args = parser.parse_args()
@@ -20,15 +20,19 @@ async def main():
     sleep_time = args.sleep
 
     if not sliver_config.exists():
-        print('Sliver config not found at location provided')
+        print('[X] Sliver config not found at location provided')
         exit(1)
     
 
     config = SliverClientConfig.parse_config_file(sliver_config)
     client = SliverClient(config)
+    print('[*] Connecting to Sliver Server...')
     await client.connect()
+    print('[*] Connected to Sliver Server!')
 
+    print('[*] Getting current Sliver beacons')
     original_beacons = await client.beacons()
+    print('[*] Getting current Sliver sessions')
     original_sessions = await client.sessions()
 
     while True:
@@ -41,6 +45,7 @@ async def main():
             current_sessions) - extract_uuid(original_sessions)
 
         if len(difference_in_beacons) > 0:
+            print('[*] Found new beacons')
             original_beacons = current_beacons
 
             for new_beacon in difference_in_beacons:
@@ -49,9 +54,15 @@ async def main():
                 new_beacon_data = new_beacon_data[0]
                 post_data = generate_slack_message(new_beacon_data, 'beacon')
 
-                requests.post(slack_url, json=post_data)
+                print(f'[*] Sending message about beacon {new_beacon}')
+                resp = requests.post(slack_url, json=post_data)
+                print(f'[*] Sent message: HTTP ({resp.status_code})')
+        
+        else:
+            print('[*] No new beacons found')
 
         if len(difference_in_sessions) > 0:
+            print('[*] Found new sessions')
             original_sessions = current_sessions
 
             for new_session in difference_in_sessions:
@@ -60,9 +71,15 @@ async def main():
                 new_session_data = new_session_data[0]
                 post_data = generate_slack_message(new_session_data, 'session')
 
-                requests.post(slack_url, json=post_data)
+                print(f'[*] Sending message about session {new_session}')
+                resp = requests.post(slack_url, json=post_data)
+                print(f'[*] Sent message: HTTP ({resp.status_code})')
+        
+        else:
+            print('[*] No new sessions found')
 
-        sleep(sleep)
+        print(f'[*] Sleeping for { sleep_time } seconds')
+        sleep(sleep_time)
 
 
 def extract_uuid(beacon_list):
