@@ -1,0 +1,3 @@
+sliver_config: /opt/container/sliver/mount/sally-the-sliver-siren.conf
+slack_url: https://slack.com
+sleep_time: 10

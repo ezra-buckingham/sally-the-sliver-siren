@@ -7,7 +7,7 @@ User=root
 StandardOutput=syslog
 StandardError=syslog
 WorkingDirectory=/opt/sally-the-sliver-siren
-ExecStart=python3 sally.py -c /path/to/config -u https://slack.com
+ExecStart=python3 sally.py -c /opt/sally-the-sliver-siren/config.yml
 
 [Install]
 WantedBy=multi-user.target
