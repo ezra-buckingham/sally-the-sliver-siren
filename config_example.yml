@@ -1,3 +1,4 @@
-sliver_config: /opt/container/sliver/mount/sally-the-sliver-siren.conf
-slack_url: https://slack.com
+sliver_config: /home/username/.sliver-client/configs/username_localhost.cfg
+provider: slack # values can be: teams or slack
+url: https://hooks.slack.com/services/1234/5678/4321 # https://contoso.webhook.office.com/webhookb2/GUID@GUID/IncomingWebhook/IDstring/etc
 sleep_time: 10
