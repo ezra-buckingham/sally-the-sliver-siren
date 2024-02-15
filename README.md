@@ -1,6 +1,6 @@
-# Sally the Slier Siren
+# Sally the Sliver Siren
 
-A custom sliver client that will send slack notifications upon new beacons / sessions that check in. Can either be run with a config file (that will be reloaded after `sleep` number of seconds, except for the `sliver_config` as the intial connection is used for all checks).
+A custom sliver client that will send slack or teams notifications upon new beacons / sessions that check in. Can either be run with a config file (that will be reloaded after `sleep` number of seconds, except for the `sliver_config` as the intial connection is used for all checks).
 
 ## Usage
 
@@ -13,20 +13,22 @@ pip3 install -r requirements.txt
 Once all dependencies are installed, you can then run the python script (which will run continuously).
 
 ```
-usage: sally.py [-h] [-c CONFIG] [-S SLIVER_CONFIG] [-u SLACK_URL] [-s SLEEP]
+usage: sally.py [-h] [-c CONFIG] [-S SLIVER_CONFIG] [-u URL] [-p PROVIDER] [-s SLEEP]
 
 Custom Sliver client that will will emit events and send webhook notifications when new beacons / sessions check in.
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -c CONFIG, --config CONFIG
                         Path to sally config file (which will immediately take effect as changes to Sally)
   -S SLIVER_CONFIG, --sliver_config SLIVER_CONFIG
                         Path to the sliver config to connect with
-  -u SLACK_URL, --slack_url SLACK_URL
-                        Slack URL to send notifications to
+  -u URL, --url URL     Webhook URL to send notifications to
+  -p PROVIDER, --provider PROVIDER
+                        Slack or Teams
   -s SLEEP, --sleep SLEEP
                         Sleep time in between checking for changes in beacons / sessions
+
 ```
 
 ### Usage with Command Line
@@ -34,7 +36,7 @@ optional arguments:
 If you want to run the command using only the command line arguments, a sample command would look like the following:
 
 ```bash
-python3 ./sally.py -S /path/to/sliver-config.conf -s 10 -u https://slack.com
+python3 ./sally.py -S /path/to/sliver-config.conf -s 10 -p slack -u https://slack.com
 ```
 
 ### Usage with Config File
